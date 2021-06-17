@@ -1,0 +1,28 @@
+<% layout('layouts/boilerplate')%>
+    <h1>ALL WINDSPOTS</h1>
+    <ul>
+        <% for (let windspot of windspots){%>
+            <!-- <li><a href="/windspots/<%=windspot._id%>"><%=  windspot.title%></a></li> -->
+        
+        <div class="card mb-3">
+            <div class="row ">
+                <div class="col-md-4">
+                    <img class="rounded img-thumbnail image-fluid m-3 " src="<%= windspot.image %> " alt="">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= windspot.title %></h5>
+                        <p class="card-text"><%= windspot.description %> </p>
+                        <p class="card-text"><%= windspot.location %> </p>                        
+                        <a class="btn btn-primary" href="/windspots/<%= windspot._id %> ">Ver</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <% }%> 
+    </ul>
+     <a href="/windspots/new">New WindSpot</a>
