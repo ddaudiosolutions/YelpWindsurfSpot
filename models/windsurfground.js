@@ -1,11 +1,24 @@
-import mongoose from 'mongoose';
-import { Review } from './review.js';
-const {Schema} = mongoose;
+const mongoose = require('mongoose')
+//import mongoose from 'mongoose';
+const Review = require ('./review')
+//const User = require ('./user')
+const Schema = mongoose.Schema
 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+/*ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});*/
 
 const windspotSchema = new Schema({
     title: String,
-    image: String,
+    images: [{ //CREAMOS UN ARRAY PARA RECOGER LOS DATOS DE LA URL DE LA FOTO Y EL NOMBRE
+        url: String,
+        filename: String
+    }],
     description: String,
     location: String,
     author: {
@@ -28,5 +41,5 @@ windspotSchema.post('findOneAndDelete', async function (doc) {
     }
 })
 
-export const WindSpot = mongoose.model('WindSpot', windspotSchema)
+module.exports = mongoose.model('WindSpot', windspotSchema)
 

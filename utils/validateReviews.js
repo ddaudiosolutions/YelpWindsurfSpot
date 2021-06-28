@@ -1,8 +1,9 @@
 
-import Joi from 'joi';
+//import Joi from 'joi';
 //IMPORTAR MODELOS
-
-import ExpressError from '../utils/ExpressError.js';
+const Joi = require ('joi')
+const ExpressError = require ('../utils/ExpressError.js')
+//import ExpressError from '../utils/ExpressError.js';
 
 const validateReview = (req, res, next)=> {
     const reviewSchema = Joi.object({
@@ -22,4 +23,4 @@ const validateReview = (req, res, next)=> {
     }
 }
 
-export default validateReview;
+module.exports = validateReview;

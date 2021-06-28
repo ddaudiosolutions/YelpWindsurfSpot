@@ -1,17 +1,19 @@
 
-import Joi from 'joi';
+//import Joi from 'joi';
 //IMPORTAR MODELOS
-
-import ExpressError from '../utils/ExpressError.js';
+const Joi = require ('joi')
+const ExpressError = require ('../utils/ExpressError.js')
+//import ExpressError from '../utils/ExpressError.js';
 
 const validateWindspot = (req, res, next)=> {
     const windspotSchema = Joi.object({
-        windspot: Joi.object({
+            windspot: Joi.object({
             title: Joi.string().required(),
             location: Joi.string().required(),
             description: Joi.string().required(),
-            image: Joi.string().required()
-        }).required()
+            //image: Joi.string().required()
+        }).required(),
+        deleteImages: Joi.array()
     })
     const {error} = windspotSchema.validate(req.body);
    
@@ -23,4 +25,4 @@ const validateWindspot = (req, res, next)=> {
     }
 }
 
-export default validateWindspot;
+module.exports = validateWindspot;

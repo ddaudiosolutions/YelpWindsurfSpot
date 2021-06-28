@@ -1,21 +1,59 @@
-import express from 'express';
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
+//console.log(process.env.CLOUDINARY_CLOUD_NAME)
+
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
+const ejsMate = require('ejs-mate');
+
+const ExpressError = require('./utils/ExpressError.js');
+const methodOverride = require('method-override');
+
+
+
+
+/*import dotenv from 'dotenv';
+dotenv.config({path:'variables.env'});
+
+if(process.env.NODE_ENV !== "production"){
+    dotenv.config()
+}
+console.log(process.env.CLOUDINARY_CLOUD_NAME)*/
+
+//dotenv.config();
+ 
+/*import express from 'express';
 import mongoose from 'mongoose';
 import methodOverride from 'method-override';
 import ejsMate from 'ejs-mate';
 
-import ExpressError from './utils/ExpressError.js';
-import session from 'express-session'; //IMPORTAMOS EL NPM DE EXPRESS-SESSION
-import flash from 'connect-flash'; // PARA REALIZAR LOS FLASHES AL TERMINAR UN REQ TIPO, CREAR BORRAR EDITAR....
+import ExpressError from './utils/ExpressError.js';*/
+const session = require('express-session');
+const flash = require('connect-flash');
+/*import session from 'express-session'; //IMPORTAMOS EL NPM DE EXPRESS-SESSION
+import flash from 'connect-flash'; */// PARA REALIZAR LOS FLASHES AL TERMINAR UN REQ TIPO, CREAR BORRAR EDITAR....
 
-//IMPORTAR ROUTES
-import windspotsRoutes from './routes/windspotsRoutes.js'
-import windspotsReviews from './routes/windspotsReviews.js'
-import usersRoutes from './routes/usersRoutes.js';
 
 //IMPORTAR ELEMENTOS DE AUTENTICACION
-import passport from 'passport';
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user.js');
+/*import passport from 'passport';
 import LocalStrategy from 'passport-local'
-import {User} from './models/user.js'
+import {User} from './models/user.js'*/
+
+//IMPORTAR ROUTES
+const usersRoutes = require('./routes/usersRoutes.js');
+const windspotsRoutes = require('./routes/windspotsRoutes.js');
+const windspotsReviews = require('./routes/windspotsReviews.js');
+/*import windspotsRoutes from './routes/windspotsRoutes.js'
+import windspotsReviews from './routes/windspotsReviews.js'
+import usersRoutes from './routes/usersRoutes.js';*/
+
+
 
 //CONECTAR MONGO
 mongoose.connect('mongodb://localhost:27017/windsurf-camp', {
@@ -31,14 +69,17 @@ db.once("open", ()=> {
     console.log("Database connected")
 })
 
-const app = express()
+const app = express();
+
+
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'))
+
 app.use(express.urlencoded({extended: true})) //PARA PODER HACER CORRECTAMENTE POST PUT Y TOMAR LOS DATOS POR REQ.BODY
 app.use(methodOverride('_method'));
-
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname,'public')))
 
 ///1o CONFIGURAMOS LA SESION
 //2o CONFIGURAMOS FLASH, SINO NO FUNCIONA. Y SIEMPRE ANTES DE LAS ROUTES.

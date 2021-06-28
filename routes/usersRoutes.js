@@ -1,28 +1,38 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import catchAsync from '../utils/catchAsync.js'
+const passport = require('passport');
+const catchAsync = require('../utils/catchAsync');
+const User = require('../models/user');
+const users = require('../controllers/userController');
 
-import {User} from '../models/user.js';
-import passport from 'passport';
+//import express from 'express';
+//const router = express.Router();
 
-import {paginaRegistro, 
-    crearRegistro, 
-    paginamostrarLogin, 
-    paginaGuardarLogin, 
-    paginaLogOut} from '../controllers/userController.js'
+
+//import catchAsync from '../utils/catchAsync.js'
+
+//import {User} from '../models/user.js';
+//import passport from 'passport';
+
+/*const {paginaRegistro, 
+        crearRegistro, 
+        paginamostrarLogin, 
+        paginaGuardarLogin, 
+        paginaLogOut} = require ( '../controllers/userController.js')*/
 //RUTAS DE REGISTRO
 
-router.get ('/register', paginaRegistro)
+router.route ('/register')
+        .get(users.paginaRegistro)
+        .post(users.crearRegistro)
 
-router.post('/register', catchAsync (crearRegistro))
+//router.post('/register',  crearRegistro)
 
 //RUTAS PARA LOGEARSE
-
-router.get('/login', paginamostrarLogin)
-
-router.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), paginaGuardarLogin)
+router.route('/login')
+        .get(users.paginamostrarLogin)
+        .post(passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), users.paginaGuardarLogin)
 
 //RUTAS PARA SALIR DE LOGIN
 
-router.get('/logout', paginaLogOut)
-export default router;
+router.get('/logout', users.paginaLogOut)
+module.exports = router;

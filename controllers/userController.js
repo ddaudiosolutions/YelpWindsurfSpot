@@ -1,15 +1,18 @@
-import express from 'express';
+//import express from 'express';
+const express = require ('express');
 const router = express.Router();
-import catchAsync from '../utils/catchAsync.js'
+//import catchAsync from '../utils/catchAsync.js'
+const User = require('../models/user.js')
+//import {User} from '../models/user.js';
+//import passport from 'passport';
 
-import {User} from '../models/user.js';
-import passport from 'passport';
+const passport = require ('passport')
 
-const paginaRegistro = (req, res)=> {
+module.exports.paginaRegistro = (req, res)=> {
     res.render('users/register');
 }
 
-const crearRegistro = async (req, res, next)=>{
+module.exports.crearRegistro = async (req, res, next)=>{
     //HACIENDO EL TRY CATCH CONSIGO QUE EL MENSAJE APAREZCA EN LA MISMA PAGINA
      try {
      const {email, username, password} = req.body //destructuramos para llamar a los datos
@@ -34,23 +37,18 @@ const crearRegistro = async (req, res, next)=>{
  }
 
 
- const paginamostrarLogin = (req, res)=>{
+ module.exports.paginamostrarLogin = (req, res)=>{
     res.render('users/login' )
 }
 
-const paginaGuardarLogin = (req, res)=>{
+module.exports.paginaGuardarLogin = (req, res)=>{
     req.flash('success', 'Bienvenido De Vuelta')
     res.redirect('/windspots')
 }
 
-const paginaLogOut = (req, res)=>{
+module.exports.paginaLogOut = (req, res)=>{
     req.logout()
     req.flash('success', 'GOODBYE')
     res.redirect('/')
 }
 
-export { paginaRegistro,
-    crearRegistro,
-    paginamostrarLogin,
-    paginaGuardarLogin,
-    paginaLogOut}

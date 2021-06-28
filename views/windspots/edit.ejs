@@ -1,7 +1,8 @@
 <% layout('layouts/boilerplate')%>
     <h2 class="text-center">EDIT WINDSPOT</h2>
     <div class="col-6 offset-3">
-        <form action="/windspots/<%=windspot._id%>?_method=PUT" method="POST" novalidate class="validated-form" >
+       
+        <form action="/windspots/<%=windspot._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data" >
             <div class="mb-3">
                 <label for="title" class="form-label">WindSpot Name</label>
                 <input type="input" class="form-control" id="title"  name='windspot[title]' value="<%= windspot.title%>" required>
@@ -20,14 +21,35 @@
                 <div class="invalid-feedback">Describe el spot (vientos favorables, acceso al mar, parking, espacio para montaje, etc...)</div>
                 <div class="valid-feedback">Gracias por la descripción</div>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="image" class="form-label">WindSpot Image Url</label>
                 <input type="text" class="form-control" id="image" name="windspot[image]" value="<%= windspot.image %> "required>
                 <div class="invalid-feedback">Introduce una URL valida de la imagen</div>
                 <div class="valid-feedback">Gracias por la foto</div>
+            </div> -->
+            <div class="mb-3">
+                <div class="form-file custom-file">
+                    <input type="file" class="form-file-input" id="" name="image"  multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
+                </div>
+            </div > 
+            
+            <div class="mb-3">
+                <% windspot.images.forEach(function(img, i) {%>
+                    <img src="<%= img.url %>" class="img-thumbnail">
+                    <div class="form-check-inline"  >
+                        <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                    </div>
+                    <label for="image-<%=i%>" >Delete</label>
+              <%  }) %>  
+            </div>
+            <div class="mb-3"> 
+                <button class="btn btn-primary">Update WindSpot</button>
             </div>
             
-            <button class="btn btn-primary">Update WindSpot</button>
         </form>
 
     </div>

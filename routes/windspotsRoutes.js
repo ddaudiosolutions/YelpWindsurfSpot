@@ -1,50 +1,47 @@
-import express from 'express';
+const express = require ('express')
+//import express from 'express';
 const router = express.Router({mergeParams: true})
-import {WindSpot} from '../models/windsurfground.js'; 
-import catchAsync from '../utils/catchAsync.js';
-import validateWindspot from '../utils/validateWindspot.js';
-//import isAuthor from '../utils/isAuthor.js'
-import isLoggedIn from '../utils/idLoggedInMw.js';
 
+const dotenv = require ('dotenv')
+//import dotenv from 'dotenv';
+dotenv.config()
+
+const WindSpot = require ('../models/windsurfground.js')
+//import {WindSpot} from '../models/windsurfground.js'; 
+const catchAsync = require('../utils/catchAsync');
+//import catchAsync from '../utils/catchAsync.js';
+const validateWindspot = require ('../utils/validateWindspot.js')
+//import validateWindspot from '../utils/validateWindspot.js';
+const isAuthor = require('../utils/idLoggedInMw')
+//import isLoggedIn from '../utils/idLoggedInMw.js';
+const isLoggedIn = require ('../utils/idLoggedInMw.js')
+
+const multer = require ('multer')
+//import multer from 'multer'; //necesitamos npm multer para modificar el formulario y poder manegar archivos
+
+const {storage } = require ('../cloudinary')
+ const upload = multer({storage});
 
 // IMPORTAR CONTROLERS
-import {index, 
-    newWindspotForm, 
-    guardarNewWindspot,
-    mostrarWindspot,
-    editarWindspot,
-    borrarWindspot} from '../controllers/windspotsController.js'
+const windspots = require('../controllers/windspotsController')
 
+router.route('/')
+    .get(catchAsync(windspots.index))
+    .post(isLoggedIn,  upload.array('image'), validateWindspot, catchAsync(windspots.guardarNewWindspot))
     
-// const isAuthor = async(req, res, nex)=> {
-//     const {id} = req.params;
-//     const windspot = await WindSpot.findById(id);
-//     if(!windspot.author.equals(req.user._id)){
-//         req.flash('error', 'You do not have permission to do that!!!');
-//     return res.redirect(`/windspots/${id}`)
-//     }
-//     next()
-// }
+
+router.get('/new', isLoggedIn, windspots.newWindspotForm )
 
 
-router.get('/', index)
+ 
+router.route('/:id')
+    .get(catchAsync (windspots.mostrarWindspot))
+    .put(isLoggedIn, isAuthor , upload.array('image'), validateWindspot, catchAsync(windspots.editarWindspot))
+    .delete(catchAsync(windspots.borrarWindspot) )
 
-router.get('/new', isLoggedIn, newWindspotForm )
 
-router.post('/', isLoggedIn, validateWindspot, catchAsync (guardarNewWindspot));
-
-router.get('/:id',  catchAsync (mostrarWindspot));
-
-router.get('/edit/:id', isLoggedIn,  async (req, res) => {
-    const windspot = await WindSpot.findById(req.params.id)
-
-    res.render('windspots/edit', {windspot})
-}) 
-
-router.put('/:id', isLoggedIn, validateWindspot, catchAsync(editarWindspot));
-
-router.delete('/:id', borrarWindspot )
+router.get('/edit/:id', isLoggedIn,  catchAsync(windspots.mostrarEdicionWindspot)) 
 
 
 
-export default router;
+module.exports = router;

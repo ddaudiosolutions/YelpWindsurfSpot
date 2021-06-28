@@ -9,4 +9,4 @@ const idLoggedIn = (req, res, next) => {
     next();
 }
 
-export default idLoggedIn;
+module.exports =  idLoggedIn;

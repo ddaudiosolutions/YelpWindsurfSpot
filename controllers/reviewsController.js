@@ -1,11 +1,14 @@
 
-import {Review} from '../models/review.js';
-import {WindSpot} from '../models/windsurfground.js';
+const Review = require ('../models/review.js')
+//import {Review} from '../models/review.js';
+//import {WindSpot} from '../models/windsurfground.js';
+const WindSpot = require ('../models/windsurfground.js')
 
-const guardarReview = async(req, res) => {
+module.exports.guardarReview = async(req, res) => {
     const windspot = await WindSpot.findById(req.params.id) //identificamos el spot
     //console.log(windspot)
     const review = new Review(req.body.review) //realizamos el cuestionario    
+    review.author = req.user._id;
     windspot.reviews.push(review); //añadimos al windspot el cuestionario en el array creado en el modelo windsurfground.js
     await review.save(); //SALVAMOS EL REVIEW
     await windspot.save(); //SALVAMOS EL SPOT PARA GUARDAR EL REVIEW
@@ -13,7 +16,7 @@ const guardarReview = async(req, res) => {
     res.redirect(`/windspots/${windspot._id}`) 
 }
 
-const borrarReview = async (req, res) =>{
+module.exports.borrarReview = async (req, res) =>{
     //res.send('BORRANDO REVIEW')
     //const windspot = await WindSpot.findById(req.params.id)
     const {reviewId, id} = req.params; //RECUPERAMOS LOS ID DEL SPOT I DEL REVIEW
@@ -24,4 +27,4 @@ const borrarReview = async (req, res) =>{
 
 }
 
-export { guardarReview, borrarReview}
+//module.exports = { guardarReview, borrarReview}
