@@ -9,16 +9,20 @@ const ImageSchema = new Schema({
     filename: String
 });
 
-/*ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
-});*/
+//ESTO NOS SIRVE PARA INTRODUCIR EN MEDIO DE LA URL LA OPCIÓN DE W_200 Y CONVERTIR LAS IMAGENES
+// A LA HORA DE VISIONARLAS CON UN WIDTH MAX DE 200
+
+ImageSchema.virtual('thumbnail').get(function(){
+    return this.url.replace('/upload', '/upload/w_200')
+})
+
+// ImageSchema.virtual('thumShow').get(function(){
+//     return this.url.replace('/upload', '/upload/w_600,h_300')
+// })
 
 const windspotSchema = new Schema({
     title: String,
-    images: [{ //CREAMOS UN ARRAY PARA RECOGER LOS DATOS DE LA URL DE LA FOTO Y EL NOMBRE
-        url: String,
-        filename: String
-    }],
+    images: [ImageSchema],
     description: String,
     location: String,
     author: {

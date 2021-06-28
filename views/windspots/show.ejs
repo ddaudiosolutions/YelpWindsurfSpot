@@ -9,7 +9,7 @@
           EL CAROUSEL PIDE QUE UNA SIEMPRE ESTÉ ACTIVA, POR ESO USAMOS EL CONDICIONAL -->
           <% windspot.images.forEach((img, i) => { %>
           <div class="carousel-item  <%= i === 0 ? 'active' : '' %> ">
-            <img src="<%=  img.url %>" class="d-block w-100" alt="">
+            <img src="<%=img.url %>" class="d-block w-100" alt="">
           </div>
           <% }) %>  
          
