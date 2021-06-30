@@ -14,27 +14,11 @@ const methodOverride = require('method-override');
 
 
 
-
-/*import dotenv from 'dotenv';
-dotenv.config({path:'variables.env'});
-
-if(process.env.NODE_ENV !== "production"){
-    dotenv.config()
-}
-console.log(process.env.CLOUDINARY_CLOUD_NAME)*/
-
-//dotenv.config();
- 
-/*import express from 'express';
-import mongoose from 'mongoose';
-import methodOverride from 'method-override';
-import ejsMate from 'ejs-mate';
-
-import ExpressError from './utils/ExpressError.js';*/
 const session = require('express-session');
 const flash = require('connect-flash');
 /*import session from 'express-session'; //IMPORTAMOS EL NPM DE EXPRESS-SESSION
 import flash from 'connect-flash'; */// PARA REALIZAR LOS FLASHES AL TERMINAR UN REQ TIPO, CREAR BORRAR EDITAR....
+
 
 
 //IMPORTAR ELEMENTOS DE AUTENTICACION
@@ -53,10 +37,18 @@ const windspotsReviews = require('./routes/windspotsReviews.js');
 import windspotsReviews from './routes/windspotsReviews.js'
 import usersRoutes from './routes/usersRoutes.js';*/
 
+//EVITAR MONGO INJECTION
+const mongoSanitize = require('express-mongo-sanitize');
 
+//PARA CONECTAR CON MONGODB ATLAS
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/windsurf-camp'
+//'mongodb://localhost:27017/windsurf-camp'
+
+//CONECTAR CON MONGO-CONNECT PARA TENER BD EN LOCAL Y PRODUCCION
+const MongoDBStore = require('connect-mongo')(session);
 
 //CONECTAR MONGO
-mongoose.connect('mongodb://localhost:27017/windsurf-camp', {
+mongoose.connect(dbUrl,  {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -81,12 +73,31 @@ app.use(express.urlencoded({extended: true})) //PARA PODER HACER CORRECTAMENTE P
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname,'public')))
 
+app.use(mongoSanitize());
 ///1o CONFIGURAMOS LA SESION
 //2o CONFIGURAMOS FLASH, SINO NO FUNCIONA. Y SIEMPRE ANTES DE LAS ROUTES.
 
+//CREAMOS LA VARIABLE SECRET(EN EL PROCESO DE DEPLOYMENT), PARA QUE USE LA LOCAL O LA DE ATLAS
+const secret = process.env.SECRET || 'thesecret'
+
+
+//CREAMOS UNA NUEVA MONGO-CONNECT DBSTORE PARA CONECTAR LA SESION CON LA BASE DE DATOS (ESTE PASO ES EN EL DEPLOYMENT)
+const store = new MongoDBStore ({
+    url: dbUrl,
+    secret,
+    touchAfter: 24 * 60 * 60
+
+});
+
+store.on ('error', function (e) {
+    console.log('SESSION STORE ERROR', e)
+    
+});
 //CREAMOS LA CONFIGURACION DE SESION
 const sessionConfig = {
-    secret: 'thesecret',
+    store,
+    name: 'session',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {

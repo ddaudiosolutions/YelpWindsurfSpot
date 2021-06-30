@@ -1,12 +1,13 @@
 <% layout('layouts/boilerplate')%>
+<div class="mb-3" id="cluster-map" style="width: 100%; height: 500px "></div>
     <h1>ALL WINDSPOTS</h1>
-    <ul>
+    
         <% for (let windspot of windspots){%>            
         <div class="card mb-3">
-            <div class="row ">
+            <div class="row">
                 <div class="col-md-4">
                     <%if(windspot.images.length) {%>
-                    <img class="rounded img-thumbnail image-fluid m-3 " src="<%=windspot.images[0].thumbnail%> " alt="">
+                    <img class="rounded img-fluid m-3 " src="<%=windspot.images[0].url%> " alt="">
                     <% }else {%>
                         <img class="img-fluid" alt=""
                             src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png">
@@ -27,5 +28,10 @@
         </div>
 
         <% }%> 
-    </ul>
+        <script>
+            const mapToken = '<%-process.env.MAPBOX_TOKEN%>'; 
+            const windspots = { features: <%- JSON.stringify(windspots) %>}
+          </script>
+        <script src="/clusterMap.js"></script>
+    
      <a href="/windspots/new">New WindSpot</a>

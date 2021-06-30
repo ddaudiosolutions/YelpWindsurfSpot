@@ -1,15 +1,18 @@
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/stylesheets/style.css">
 
+
+
 <div class="row">
     <div class="col-6 ">
+      <div id='map'  class="mb-3"></div>
       <div id="windspotCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <!-- CREAMOS UN FOREACH PARA PASAR POR LAS DIFERENTES FOTOS EN CASO DE QUE HAYA MÁS DE UNA
           EL CAROUSEL PIDE QUE UNA SIEMPRE ESTÉ ACTIVA, POR ESO USAMOS EL CONDICIONAL -->
           <% windspot.images.forEach((img, i) => { %>
           <div class="carousel-item  <%= i === 0 ? 'active' : '' %> ">
-            <img src="<%=img.url %>" class="d-block w-100" alt="">
+            <img src="<%=img.url %>" class=" rounded img-fluid" alt="">
           </div>
           <% }) %>  
          
@@ -98,8 +101,10 @@
             <div class="card-body">
               <!-- <h5 class="card-title">Rating: <%= review.rating%></h5> -->
               <p class="starability-result" data-rating= <%= review.rating%>>
-                <h5 class="card-title">By: <%= review.author.username%></h5>
-              <p class="card-text">Review: <%= review.body%></p>                   
+              <h6 class="card-title">Author:  <%= review.author.username%></h6>
+              <h6 class="card-text">Review: <%= review.body%></h6>    
+              
+                             
                 <!-- Rated: <%= review.rating%> stars -->
               </p>          
             </div>
@@ -115,7 +120,15 @@
     </div>
     
 </div>
-    
+<!-- PARA MANDAR EL TOKEN DEL MAPA ALA SCRIPT QUE GENERA EL MAPA -->
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>'; 
+  const windspot = <%-JSON.stringify(windspot)%>;
+</script>
+
+  <!-- PARA EJECUTAR EL MAPA. -->
+  <script src="/showPageMap.js"></script>
+
     <footer>
-        
+         
     </footer>
